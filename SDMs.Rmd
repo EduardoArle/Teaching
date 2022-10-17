@@ -1,0 +1,69 @@
+---
+title: "An Introduction to species distribution models"
+author: "Eduardo Arlé"
+date: "19/10/2022"
+output: html_document
+---
+
+## Load the packages we will need (if a package is still not in installed, use install.packages("PackageName") to install it).
+
+```{r}
+library(rworldmap);library(rgdal);library(raster);library(plotfunctions);library(bRacatus)
+```
+
+## Set work directory
+
+```{r}
+wd <- "C:/Users/ca13kute/Documents/Conferences/Conservation/Workshop"
+```
+
+## Load point data
+
+```{r}
+setwd(paste0(wd,"/Data"))  #set the working directory with data
+
+occ <- read.csv("Capra_nubiana.csv")   #load points into R
+
+plotOcc(occ, regional = F)  #visualise the data
+```
+
+## Transform "data.frame" into "SpatialPolygonsDataFrame"
+
+```{r}
+class(occ)   #check class
+
+occ_sp <- occ  #copy object
+
+coordinates(occ_sp) <- ~decimalLongitude+decimalLatitude  #inform coordinates
+
+class(occ_sp)   #checkclass
+```
+
+
+## download bioclimatic variables (raster stack)
+
+```{r}
+setwd(paste0(wd,"/Data"))  #set the working directory with data
+
+anual_prec <- raster("Anual_prec.tif")
+
+anual_mean_temp <- raster("Anual_mean_temp.tif")
+
+plot(anual_prec)
+plot(anual_mean_temp)
+```
+
+
+
+#### second exercise
+
+## Doanload point data
+
+```{r}
+pts <- getOcc("Capra nubiana")
+head(pts)
+
+class(pts)
+plotOcc(pts, regional = F)  
+```
+
