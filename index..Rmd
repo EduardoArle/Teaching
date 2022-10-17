@@ -1,0 +1,116 @@
+---
+title: "An Introduction to species distribution models"
+author: "Eduardo Arlé"
+date: "19/10/2022"
+output: html_document
+---
+
+## Load the packages we will need (if a package is still not in installed, use install.packages("PackageName") to install it).
+
+```{r, print = FALSE}
+library(rworldmap);library(rgdal);library(raster);library(plotfunctions);library(bRacatus);library(rgbif)
+```
+
+
+## Download species data from GBIF
+
+```{r}
+koala <- occ_search(scientificName="Phascolarctos cinereus",
+                      hasCoordinate=T)
+
+koala_pts <- koala[[3]]
+
+koala_pts2 <- giveOcc(koala_pts, 
+                         longitude = "decimalLongitude",
+                         latitude = "decimalLatitude")
+
+coordinates(koala_pts) <- ~decimalLongitude+decimalLatitude  #inform coordinates
+  
+#visualise
+plotOcc(koala_pts2)
+```
+
+
+## download bioclimatic variables (raster stack)
+
+```{r}
+bioclim <- getData("worldclim",var="bio",res=10)
+
+class(bioclim)
+nlayers(bioclim)
+
+bioclim[[1]]
+
+anual_mean_temp <- bioclim[[1]]
+
+class(anual_mean_temp)
+
+plot(anual_mean_temp)
+```
+
+
+## Crop the raster to the area o study
+
+```{r}
+extent(anual_mean_temp)
+extent(koala_pts)
+
+study_area <- crop(anual_mean_temp,extent(koala_pts))
+
+plot(study_area)
+plot(koala_pts,add=T,pch=19,cex=.5)
+```
+
+## Visualising another layer of the raster stack, and crop the whole area of Australia
+
+```{r}
+anual_prec <- bioclim[[12]]
+
+plot(anual_prec)
+
+australia_prec <- crop(anual_prec,extent(109,156,-44,-10))
+australia_temp <- crop(anual_mean_temp,extent(109,156,-44,-10))
+
+plot(australia_prec)
+plot(koala_pts,add=T,pch=19,cex=.5)
+```
+
+
+## Extracting values from rasters at point locations
+
+```{r}
+australia_var <- stack(australia_prec,australia_temp)
+australia_var
+
+values <- extract(australia_var,koala_pts)
+head(values)
+
+class(values)
+values <- as.data.frame(values)
+class(values)
+
+min_temp <- min(values$bio1)
+max_temp <- max(values$bio1)
+
+min_prec <- min(values$bio12)
+max_prec <- max(values$bio12)
+```
+
+
+## Produce a very simple SDM for the Koala
+
+```{r}
+climatic_suitability <- australia_prec
+
+for(i in 1:length(climatic_suitability[]))
+{
+  climatic_suitability[i] <- ifelse(australia_temp[i] > min_temp &
+                            australia_temp[i] < max_temp &
+                            australia_prec[i] > min_prec &
+                            australia_prec[i] < max_prec,
+                            1,0)
+  
+}
+
+plot(climatic_suitability)
+```
