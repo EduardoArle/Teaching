@@ -2,7 +2,9 @@
 title: "An Introduction to species distribution models"
 author: "Eduardo Arlé"
 date: "19/10/2022"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ## Load the packages we will need (if a package is still not in installed, use install.packages("PackageName") to install it).
