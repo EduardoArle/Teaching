@@ -42,11 +42,11 @@ nlayers(bioclim)
 
 bioclim[[1]]
 
-anual_mean_temp <- bioclim[[1]]
+annual_mean_temp <- bioclim[[1]]
 
-class(anual_mean_temp)
+class(annual_mean_temp)
 
-plot(anual_mean_temp)
+plot(annual_mean_temp)
 ```
 
 
@@ -76,12 +76,12 @@ plot(koala_pts, add=T, pch=19, cex=.5)
 ## Visualising another layer of the raster stack, and crop the whole area of Australia
 
 ```{r}
-anual_prec <- bioclim[[12]]
+annual_prec <- vars$bio12
 
-plot(anual_prec)
+plot(annual_prec)
 
-australia_prec <- crop(anual_prec,extent(109,156,-44,-10))
-australia_temp <- crop(anual_mean_temp,extent(109,156,-44,-10))
+australia_prec <- crop(annual_prec,extent(109,156,-44,-10))
+australia_temp <- crop(annual_mean_temp,extent(109,156,-44,-10))
 
 plot(australia_prec)
 plot(koala_pts,add=T,pch=19,cex=.5)
