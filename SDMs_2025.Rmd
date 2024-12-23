@@ -50,39 +50,26 @@ plot(annual_mean_temp)
 ```
 
 
+## Crop the raster to the area of study (Australia)
+
+```{r, eval = FALSE}
+australia_prec <- crop(annual_prec,extent(109,156,-44,-10))
+australia_temp <- crop(annual_mean_temp,extent(109,156,-44,-10))
+```
+
+
 ## The geodata server is down for maintenance. We need to load the vars manually.
 
 ```{r}
-setwd("/Users/carloseduardoaribeiro/Documents/CNA/Data/Variables/wc2-5")
-vars <- lapply(list.files(pattern = '.bil$'), raster)
-names(vars) <- gsub('.bil', '', list.files(pattern = '.bil$'))
+setwd('/Users/carloseduardoaribeiro/Documents/Post-doc/Teaching/Community Ecology/Vars_Australia')
+australia_prec <- raster('Annual_prec.tif')
+australia_temp <- raster('Annual_mean_temp.tif')
 ```
 
 
-## Crop the raster to the area of study
+## Visualise a layer of the raster stack
 
 ```{r}
-annual_mean_temp <- vars$bio1
-
-extent(annual_mean_temp)
-extent(koala_pts)
-
-study_area <- crop(annual_mean_temp, extent(koala_pts))
-
-plot(study_area)
-plot(koala_pts, add=T, pch=19, cex=.5)
-```
-
-## Visualising another layer of the raster stack, and crop the whole area of Australia
-
-```{r}
-annual_prec <- vars$bio12
-
-plot(annual_prec)
-
-australia_prec <- crop(annual_prec,extent(109,156,-44,-10))
-australia_temp <- crop(annual_mean_temp,extent(109,156,-44,-10))
-
 plot(australia_prec)
 plot(koala_pts,add=T,pch=19,cex=.5)
 ```
