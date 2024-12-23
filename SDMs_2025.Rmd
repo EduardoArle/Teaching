@@ -8,7 +8,8 @@ output: html_document
 ## Load the packages we will need (if a package is still not in installed, use install.packages("PackageName") to install it).
 
 ```{r, print = FALSE}
-library(rworldmap);library(rgdal);library(raster);library(plotfunctions);library(bRacatus);library(rgbif)
+library(rnaturalearth);library(sp);library(sf);library(plotfunctions)
+library(rgbif);library(raster)
 ```
 
 
@@ -18,7 +19,7 @@ library(rworldmap);library(rgdal);library(raster);library(plotfunctions);library
 koala <- occ_search(scientificName="Phascolarctos cinereus",
                       hasCoordinate=T)
 
-koala_pts <- koala[[3]]
+koala <- koala[[3]]
 
 koala_pts2 <- giveOcc(koala_pts, 
                          longitude = "decimalLongitude",
@@ -34,7 +35,7 @@ plotOcc(koala_pts2)
 ## download bioclimatic variables (raster stack)
 
 ```{r}
-bioclim <- getData("worldclim",var="bio",res=10)
+bioclim <- worldclim_global(var="bio", res=10, path = getwd())
 
 class(bioclim)
 nlayers(bioclim)

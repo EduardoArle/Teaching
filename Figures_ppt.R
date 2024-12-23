@@ -1,4 +1,4 @@
-library(rgbif)
+library(rgbif); library(bRacatus)
 
 #get and prepare occ points 
 
@@ -80,7 +80,7 @@ for(i in 1:length(climatic_suitability_SA[]))
                                        SA_prec[i] > min_prec &
                                        SA_prec[i] < max_prec,
                                     1,0)
-  
+  print(i)
 }
 
 plot(climatic_suitability_SA, box = F, bty="n", axes = F, legend = F) #save map width 1000
