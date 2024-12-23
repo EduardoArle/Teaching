@@ -9,11 +9,11 @@ output: html_document
 
 ```{r, print = FALSE}
 library(rnaturalearth);library(sp);library(sf);library(plotfunctions)
-library(rgbif);library(raster)
+library(rgbif);library(raster);library(bRacatus);library(geodata)
 ```
 
 
-## Download species data from GBIF
+## Download species data from GBIF.
 
 ```{r}
 koala <- occ_search(scientificName="Phascolarctos cinereus",
@@ -32,9 +32,9 @@ plotOcc(koala_pts2)
 ```
 
 
-## download bioclimatic variables (raster stack)
+## Download bioclimatic variables.
 
-```{r}
+```{r, eval = FALSE}
 bioclim <- worldclim_global(var="bio", res=10, path = getwd())
 
 class(bioclim)
@@ -50,13 +50,24 @@ plot(anual_mean_temp)
 ```
 
 
+## The geodata server is down for maintenance. We need to load the vars manually.
+
+```{r}
+setwd("/Users/carloseduardoaribeiro/Documents/CNA/Data/Variables/wc2-5")
+vars <- lapply(list.files(pattern = '.bil$'), raster)
+names(vars) <- gsub('.bil', '', list.files(pattern = '.bil$'))
+```
+
+
 ## Crop the raster to the area of study
 
 ```{r}
-extent(anual_mean_temp)
+annual_mean_temp <- vars$bio1
+
+extent(annual_mean_temp)
 extent(koala_pts)
 
-study_area <- crop(anual_mean_temp, extent(koala_pts))
+study_area <- crop(annual_mean_temp, extent(koala_pts))
 
 plot(study_area)
 plot(koala_pts, add=T, pch=19, cex=.5)
